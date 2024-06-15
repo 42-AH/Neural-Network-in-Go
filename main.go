@@ -117,6 +117,8 @@ func main() {
       feedForward()
       if math.Abs(cost()) <= 0.0001 {
         fmt.Println("Finished without learning")
+      } else {
+        fmt.Println("Not correct")
       }
     }
   }
