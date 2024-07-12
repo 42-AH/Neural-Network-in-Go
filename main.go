@@ -1,6 +1,7 @@
 package main
 
 import (
+  //No external libraries
   "fmt"
   "math"
   "math/rand"
@@ -15,6 +16,7 @@ var (
   target, predicted float64
 )
 
+//Initializes the Neural Network
 func makeNN(layerSizes []int) {
   numLayers := len(layerSizes)
   weights = make([][][]float64, numLayers-1)
@@ -50,6 +52,7 @@ func makeNN(layerSizes []int) {
   }
 }
 
+//ReLU and its derivative
 func relu(x float64) float64 {
   if x > 0 {
     return x
@@ -68,6 +71,7 @@ func cost() float64 {
   return target - predicted
 }
 
+//Learning based on its error
 func backprop() {
   numLayers := len(weights) + 1
 
@@ -99,6 +103,7 @@ func backprop() {
   }
 }
 
+//Gets the output
 func feedForward() float64 {
   layerOutputs[0] = inputs
 
