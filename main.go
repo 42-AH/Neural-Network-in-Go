@@ -71,7 +71,7 @@ func cost() float64 {
   return target - predicted
 }
 
-//Learning based on its error
+// Backpropogation
 func backprop() {
   numLayers := len(weights) + 1
 
@@ -103,7 +103,7 @@ func backprop() {
   }
 }
 
-//Gets the output
+//Feedforward
 func feedForward() float64 {
   layerOutputs[0] = inputs
 
