@@ -14,6 +14,7 @@ var (
 	learningRate      float64
 	inputs            []float64
 	target, predicted float64
+	dropoutProb       float64
 )
 
 // Initializes the Neural Network
@@ -68,7 +69,7 @@ func reluDerivative(x float64) float64 {
 }
 
 func sigmoid(x float64) float64 {
-	return 1-(1/(math.Exp(-x)))
+	return 1 - (1 / (math.Exp(-x)))
 }
 
 func sigmoidDerivative(x float64) float64 {
@@ -76,16 +77,16 @@ func sigmoidDerivative(x float64) float64 {
 }
 
 func tanh(x float64) float64 {
-	return (2/(1+(math.Exp(-(2*x)))))-1
+	return (2 / (1 + (math.Exp(-(2 * x))))) - 1
 }
 
 func tanhDerivative(x float64) float64 {
-    t := tanh(x)
-    return 1 - t*t
+	t := tanh(x)
+	return 1 - t*t
 }
 
 func softplus(x float64) float64 {
-	return math.Log(1+math.Exp(x))
+	return math.Log(1 + math.Exp(x))
 }
 
 func softplusDerivative(x float64) float64 {
@@ -139,17 +140,31 @@ func feedForward() float64 {
 				input += layerOutputs[l][j] * weights[l][i][j]
 			}
 			input += biases[l][i]
-			layerOutputs[l+1][i] = relu(input)
+
+			activated := relu(input)
+
+			if l != len(weights)-1 { // Only apply dropout on hidden layers
+				if rand.Float64() < dropoutProb {
+					layerOutputs[l+1][i] = 0
+				} else {
+					layerOutputs[l+1][i] = activated
+				}
+			} else {
+				// Output layer - no dropout
+				layerOutputs[l+1][i] = activated
+			}
 		}
 	}
 
 	predicted = layerOutputs[len(layerOutputs)-1][0]
+
 	return predicted
 }
 
 func main() {
 	layerSizes := []int{2, 3, 2, 1}
 	makeNN(layerSizes)
+	dropoutProb = 0 // For anything less precise than addition, set dropout % accordingly
 
 	for {
 		target = inputs[0] + inputs[1]
